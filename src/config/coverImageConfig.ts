@@ -3,6 +3,7 @@ import type { CoverImageConfig } from "../types/coverImageConfig";
 /**
  * 文章封面图配置
  *
+ * 
  * enableInPost - 是否在文章详情页显示封面图
  * enableInPostOverlay - 是否使用标题和元数据叠加在封面上的布局
  * showLoading - 是否显示封面图加载动画
