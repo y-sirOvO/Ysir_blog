@@ -77,6 +77,8 @@ const isHomePageCheck = isHomePage(Astro.url.pathname);
 // defines global css variables
 // why doing this in Layout instead of GlobalStyles: https://github.com/withastro/astro/issues/6728#issuecomment-1502203757
 const configHue = siteConfig.themeColor.hue;
+// 主题色饱和度（0 为纯灰色，1 为正常彩色），通过 --chroma-scale 作用于所有主题色
+const configSaturation = siteConfig.themeColor.saturation ?? 1;
 
 // 获取导航栏透明模式配置（banner 模式专属）
 const navbarTransparentMode =
@@ -253,7 +255,7 @@ const ogImageAlt = propsOgImageAlt ?? pageTitle;
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
-    <meta name="theme-color" content={`hsl(${siteConfig.themeColor.hue} 90% 60%)`} />
+    <meta name="theme-color" content={`hsl(${siteConfig.themeColor.hue} ${90 * (siteConfig.themeColor.saturation ?? 1)}% 60%)`} />
     {
       favicons.map((favicon) => (
         <link
@@ -345,6 +347,7 @@ const ogImageAlt = propsOgImageAlt ?? pageTitle;
       define:vars={{
         PAGE_WIDTH,
         configHue,
+        configSaturation,
         defaultMode: siteConfig.themeColor.defaultMode ?? "light",
         defaultWallpaperMode: backgroundWallpaper.mode,
         isWallpaperSwitchable:
@@ -400,6 +403,9 @@ const ogImageAlt = propsOgImageAlt ?? pageTitle;
       // Load the hue from local storage
       const hue = localStorage.getItem("hue") || configHue;
       document.documentElement.style.setProperty("--hue", hue);
+
+      // 主题色饱和度（0 为纯灰色），作用于所有基于 --hue 的主题色
+      document.documentElement.style.setProperty("--chroma-scale", configSaturation);
 
       // 设置卡片透明度（全屏透明模式下使用），优先使用用户自定义值
       const storedCardOpacity = localStorage.getItem("overlayCardOpacity");
